@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lab Tuần 2 - IAM và Zero Trust</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      background: #f4f7fb;
+      color: #222;
+    }
+
+    header {
+      background: #0f172a;
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+
+    main {
+      max-width: 1000px;
+      margin: 30px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+
+    h2 {
+      color: #0f172a;
+      border-left: 5px solid #2563eb;
+      padding-left: 10px;
+    }
+
+    .box {
+      background: #eef6ff;
+      border-left: 5px solid #2563eb;
+      padding: 15px;
+      margin: 15px 0;
+      border-radius: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: left;
+    }
+
+    th {
+      background: #e2e8f0;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Lab Tuần 2</h1>
+    <p>Quản lý truy cập, IAM và an toàn mạng trong điện toán đám mây</p>
+  </header>
+
+  <main>
+    <h2>1. Authentication</h2>
+    <p>
+      Authentication là quá trình xác thực danh tính người dùng.
+      Ví dụ: đăng nhập bằng Google, GitHub, email/mật khẩu hoặc OTP.
+    </p>
+
+    <h2>2. Authorization</h2>
+    <p>
+      Authorization là quá trình kiểm tra quyền truy cập sau khi người dùng đã xác thực thành công.
+      Ví dụ: chỉ cho phép email thuộc danh sách được cấp quyền truy cập website.
+    </p>
+
+    <h2>3. IAM trong Cloud</h2>
+    <p>
+      IAM giúp quản lý danh tính, phân quyền truy cập, kiểm soát tài nguyên
+      và giảm nguy cơ truy cập trái phép trong môi trường điện toán đám mây.
+    </p>
+
+    <h2>4. Zero Trust</h2>
+    <div class="box">
+      <strong>Nguyên lý chính:</strong>
+      Không mặc định tin cậy bất kỳ người dùng, thiết bị hoặc request nào.
+      Mọi truy cập đều phải được xác thực, kiểm tra quyền và giám sát.
+    </div>
+
+    <h2>5. So sánh Authentication và Authorization</h2>
+    <table>
+      <tr>
+        <th>Tiêu chí</th>
+        <th>Authentication</th>
+        <th>Authorization</th>
+      </tr>
+      <tr>
+        <td>Mục đích</td>
+        <td>Xác minh danh tính</td>
+        <td>Kiểm tra quyền truy cập</td>
+      </tr>
+      <tr>
+        <td>Câu hỏi</td>
+        <td>Bạn là ai?</td>
+        <td>Bạn được phép làm gì?</td>
+      </tr>
+      <tr>
+        <td>Ví dụ</td>
+        <td>Đăng nhập Google/GitHub</td>
+        <td>Kiểm tra email có được phép truy cập không</td>
+      </tr>
+    </table>
+
+    <h2>6. Mô hình truy cập</h2>
+    <p>
+      User gửi request đến website. Cloudflare Access kiểm tra trạng thái đăng nhập,
+      sau đó kiểm tra chính sách truy cập. Nếu hợp lệ, người dùng được truy cập
+      website Cloudflare Pages. Nếu không hợp lệ, truy cập bị từ chối.
+    </p>
+  </main>
+
+  <footer>
+    <p>Thực hiện Lab Tuần 2 - Cloud Security</p>
+  </footer>
+</body>
+</html>
