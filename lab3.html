@@ -1,0 +1,869 @@
+```html
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>LAB Tuần 3 - OWASP</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f7fb;
+      color: #1f2937;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* HEADER */
+    .site-header {
+      background: linear-gradient(135deg, #1e3a8a, #2563eb);
+      color: white;
+      padding: 45px 20px;
+      text-align: center;
+    }
+
+    .site-header h1 {
+      margin: 0;
+      font-size: 36px;
+      line-height: 1.3;
+    }
+
+    .site-header p {
+      max-width: 850px;
+      margin: 16px auto 0;
+      line-height: 1.7;
+      font-size: 17px;
+      opacity: 0.95;
+    }
+
+    .header-tags {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .header-tags span {
+      padding: 8px 15px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      font-size: 14px;
+    }
+
+    /* NAV */
+    .navbar {
+      background: #111827;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .nav-container {
+      max-width: 1150px;
+      margin: auto;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 12px 16px;
+    }
+
+    .nav-container a {
+      color: white;
+      padding: 9px 14px;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: 0.25s;
+    }
+
+    .nav-container a:hover {
+      background: #2563eb;
+    }
+
+    /* LAYOUT */
+    .main-content {
+      max-width: 1150px;
+      margin: auto;
+      padding: 35px 20px;
+    }
+
+    .section-card {
+      background: white;
+      border-radius: 18px;
+      padding: 30px;
+      margin-bottom: 28px;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+      border: 1px solid #e5e7eb;
+    }
+
+    .section-card h2 {
+      margin-top: 0;
+      color: #1e3a8a;
+      font-size: 25px;
+      border-left: 5px solid #2563eb;
+      padding-left: 12px;
+    }
+
+    .section-card h3 {
+      color: #111827;
+      margin-bottom: 10px;
+    }
+
+    .section-card p {
+      line-height: 1.75;
+      color: #374151;
+    }
+
+    .section-card ul {
+      line-height: 1.8;
+      color: #374151;
+    }
+
+    .highlight-box {
+      background: #eff6ff;
+      border-left: 5px solid #2563eb;
+      padding: 18px;
+      border-radius: 12px;
+      margin: 18px 0;
+      line-height: 1.7;
+    }
+
+    /* TABLE */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 18px;
+      overflow: hidden;
+      border-radius: 14px;
+    }
+
+    th,
+    td {
+      padding: 14px;
+      border: 1px solid #e5e7eb;
+      text-align: left;
+      vertical-align: top;
+      line-height: 1.6;
+    }
+
+    th {
+      background: #1e3a8a;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background: #f9fafb;
+    }
+
+    /* GRID */
+    .risk-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 20px;
+    }
+
+    .risk-card {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 22px;
+      transition: 0.25s;
+    }
+
+    .risk-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 24px rgba(15, 23, 42, 0.1);
+    }
+
+    .risk-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: #dbeafe;
+      color: #1d4ed8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 23px;
+      margin-bottom: 14px;
+    }
+
+    .risk-card h3 {
+      margin: 0 0 10px;
+      color: #1e40af;
+    }
+
+    .risk-card p {
+      margin: 0;
+      font-size: 15px;
+    }
+
+    /* SOLUTION */
+    .solution-list {
+      list-style: none;
+      padding: 0;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .solution-list li {
+      background: #eff6ff;
+      border-left: 5px solid #2563eb;
+      padding: 14px 16px;
+      border-radius: 12px;
+    }
+
+    /* CODE */
+    .code-box {
+      background: #111827;
+      color: #e5e7eb;
+      padding: 18px;
+      border-radius: 14px;
+      overflow-x: auto;
+      font-family: Consolas, monospace;
+      line-height: 1.6;
+      margin-top: 15px;
+    }
+
+    /* IMAGE PLACEHOLDER */
+    .image-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+      margin-top: 20px;
+    }
+
+    .image-box {
+      border: 2px dashed #93c5fd;
+      border-radius: 16px;
+      padding: 18px;
+      background: #f8fafc;
+      text-align: center;
+      min-height: 160px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .image-box strong {
+      color: #1e40af;
+      margin-bottom: 8px;
+    }
+
+    .image-box p {
+      margin: 0;
+      font-size: 14px;
+      color: #6b7280;
+    }
+
+    .image-box img {
+      width: 100%;
+      border-radius: 12px;
+      margin-top: 10px;
+      border: 1px solid #e5e7eb;
+    }
+
+    /* CLOUD */
+    .cloud-box {
+      background: linear-gradient(135deg, #ecfeff, #eff6ff);
+      border: 1px solid #bfdbfe;
+      padding: 24px;
+      border-radius: 18px;
+      margin-top: 18px;
+    }
+
+    .cloud-layers {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .layer-item {
+      background: white;
+      border-radius: 14px;
+      padding: 16px;
+      text-align: center;
+      border: 1px solid #dbeafe;
+      color: #1e40af;
+      font-weight: bold;
+    }
+
+    /* FOOTER */
+    .site-footer {
+      background: #111827;
+      color: white;
+      text-align: center;
+      padding: 25px 16px;
+      margin-top: 30px;
+    }
+
+    .site-footer p {
+      margin: 6px 0;
+      color: #d1d5db;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      .risk-grid,
+      .image-grid,
+      .cloud-layers {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .solution-list {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .site-header h1 {
+        font-size: 26px;
+      }
+
+      .section-card {
+        padding: 22px;
+      }
+
+      .risk-grid,
+      .image-grid,
+      .cloud-layers {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-container {
+        justify-content: flex-start;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+      }
+
+      .nav-container a {
+        white-space: nowrap;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <h1>LAB TUẦN 3 – Cấu hình, phát hiện và khắc phục lỗi OWASP</h1>
+    <p>
+      Bài lab tìm hiểu OWASP Top 10, thực hành phát hiện lỗ hổng bảo mật trên
+      OWASP Juice Shop, triển khai ứng dụng bằng Docker và phân tích rủi ro khi
+      đưa ứng dụng web lên môi trường cloud công cộng.
+    </p>
+
+    <div class="header-tags">
+      <span>OWASP Top 10</span>
+      <span>Juice Shop</span>
+      <span>Docker</span>
+      <span>Cloud Security</span>
+      <span>HTTP Security Headers</span>
+    </div>
+  </header>
+
+  <!-- NAVIGATION -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="#muc-tieu">Mục tiêu</a>
+      <a href="#kien-thuc">Kiến thức</a>
+      <a href="#lo-hong">Lỗ hổng</a>
+      <a href="#docker">Docker</a>
+      <a href="#khac-phuc">Khắc phục</a>
+      <a href="#cloud">Cloud</a>
+      <a href="#hinh-anh">Hình ảnh</a>
+      <a href="#ket-luan">Kết luận</a>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+
+    <!-- SECTION 1 -->
+    <section id="muc-tieu" class="section-card">
+      <h2>1. Mục tiêu bài lab</h2>
+      <p>
+        Lab Tuần 3 nhằm giúp sinh viên hiểu mối liên hệ giữa cấu hình sai,
+        lỗ hổng bảo mật và rủi ro an toàn thông tin trong ứng dụng web.
+        Thông qua OWASP Juice Shop, sinh viên có thể thực hành phát hiện lỗi,
+        quan sát request/response và đề xuất biện pháp khắc phục cơ bản.
+      </p>
+
+      <table>
+        <tr>
+          <th>Nội dung</th>
+          <th>Mục đích</th>
+        </tr>
+        <tr>
+          <td>Triển khai ứng dụng web có chủ đích yếu bảo mật</td>
+          <td>Làm quen với môi trường kiểm thử an toàn thông tin.</td>
+        </tr>
+        <tr>
+          <td>Phát hiện lỗi theo OWASP Top 10</td>
+          <td>Nhận diện các rủi ro bảo mật phổ biến trong ứng dụng web.</td>
+        </tr>
+        <tr>
+          <td>Cấu hình và đề xuất sửa lỗi</td>
+          <td>Hiểu cách giảm thiểu rủi ro ở tầng ứng dụng và tầng hạ tầng.</td>
+        </tr>
+        <tr>
+          <td>Phân tích triển khai trên cloud</td>
+          <td>Đánh giá mức độ nguy hiểm khi website được public trên internet.</td>
+        </tr>
+      </table>
+    </section>
+
+    <!-- SECTION 2 -->
+    <section id="kien-thuc" class="section-card">
+      <h2>2. Kiến thức cơ bản</h2>
+
+      <h3>2.1. HTTP, HTTPS và TLS</h3>
+      <p>
+        HTTP là giao thức truyền tải dữ liệu giữa trình duyệt và máy chủ web.
+        Tuy nhiên, HTTP không mã hóa dữ liệu nên thông tin truyền đi có thể bị
+        nghe lén hoặc chỉnh sửa. HTTPS là phiên bản an toàn hơn của HTTP vì sử dụng
+        TLS để mã hóa dữ liệu trong quá trình truyền tải.
+      </p>
+
+      <div class="highlight-box">
+        <strong>Tóm tắt:</strong> HTTP truyền dữ liệu dạng rõ, còn HTTPS sử dụng TLS
+        để mã hóa dữ liệu, giúp bảo vệ tài khoản, mật khẩu, cookie và các thông tin
+        nhạy cảm của người dùng.
+      </div>
+
+      <h3>2.2. HTTP Security Headers</h3>
+      <p>
+        HTTP Security Headers là các header bảo mật được server gửi về trình duyệt
+        nhằm hướng dẫn trình duyệt bảo vệ website tốt hơn. Các header này có thể
+        giúp giảm nguy cơ XSS, clickjacking, rò rỉ thông tin và tải tài nguyên từ
+        nguồn không đáng tin cậy.
+      </p>
+
+      <table>
+        <tr>
+          <th>Security Header</th>
+          <th>Vai trò</th>
+        </tr>
+        <tr>
+          <td>Strict-Transport-Security</td>
+          <td>Bắt buộc trình duyệt sử dụng HTTPS.</td>
+        </tr>
+        <tr>
+          <td>Content-Security-Policy</td>
+          <td>Giới hạn nguồn script, style, image để giảm nguy cơ XSS.</td>
+        </tr>
+        <tr>
+          <td>X-Frame-Options</td>
+          <td>Ngăn website bị nhúng vào iframe độc hại.</td>
+        </tr>
+        <tr>
+          <td>X-Content-Type-Options</td>
+          <td>Ngăn trình duyệt tự đoán sai loại nội dung.</td>
+        </tr>
+        <tr>
+          <td>Referrer-Policy</td>
+          <td>Kiểm soát thông tin referrer được gửi đi.</td>
+        </tr>
+      </table>
+
+      <h3>2.3. OWASP Top 10</h3>
+      <p>
+        OWASP Top 10 là danh sách các nhóm rủi ro bảo mật phổ biến và nguy hiểm nhất
+        đối với ứng dụng web. Danh sách này giúp lập trình viên, quản trị viên và
+        sinh viên nhận diện các lỗi thường gặp để có hướng phòng tránh phù hợp.
+      </p>
+
+      <h3>2.4. OWASP Juice Shop</h3>
+      <p>
+        OWASP Juice Shop là một ứng dụng web cố tình chứa nhiều lỗ hổng bảo mật.
+        Ứng dụng này thường được dùng trong học tập, giảng dạy và thực hành kiểm thử
+        an toàn thông tin trong môi trường hợp pháp.
+      </p>
+    </section>
+
+    <!-- SECTION 3 -->
+    <section id="lo-hong" class="section-card">
+      <h2>3. Các lỗ hổng phát hiện</h2>
+      <p>
+        Trong quá trình kiểm tra OWASP Juice Shop, nhóm tập trung phân tích ba nhóm
+        rủi ro phổ biến trong OWASP Top 10 gồm Injection, Broken Access Control và
+        Security Misconfiguration.
+      </p>
+
+      <div class="risk-grid">
+        <div class="risk-card">
+          <div class="risk-icon">💉</div>
+          <h3>A03: Injection</h3>
+          <p>
+            Lỗi Injection xảy ra khi ứng dụng xử lý dữ liệu đầu vào không an toàn.
+            Nếu bị khai thác, kẻ tấn công có thể truy cập trái phép, lấy dữ liệu
+            hoặc làm sai lệch dữ liệu trong hệ thống.
+          </p>
+        </div>
+
+        <div class="risk-card">
+          <div class="risk-icon">🔓</div>
+          <h3>A01: Broken Access Control</h3>
+          <p>
+            Lỗi kiểm soát truy cập xảy ra khi người dùng có thể truy cập tài nguyên,
+            dữ liệu hoặc chức năng không thuộc quyền của mình.
+          </p>
+        </div>
+
+        <div class="risk-card">
+          <div class="risk-icon">⚙️</div>
+          <h3>A05: Security Misconfiguration</h3>
+          <p>
+            Lỗi cấu hình sai bảo mật có thể xuất hiện khi website thiếu security headers,
+            bật debug mode, cấu hình CORS quá rộng hoặc để lộ thông tin hệ thống.
+          </p>
+        </div>
+      </div>
+
+      <table>
+        <tr>
+          <th>Lỗ hổng</th>
+          <th>Biểu hiện</th>
+          <th>Rủi ro</th>
+        </tr>
+        <tr>
+          <td>A03: Injection</td>
+          <td>Dữ liệu nhập vào có thể làm thay đổi logic xử lý của ứng dụng.</td>
+          <td>Đăng nhập trái phép, rò rỉ hoặc thay đổi dữ liệu.</td>
+        </tr>
+        <tr>
+          <td>A01: Broken Access Control</td>
+          <td>Người dùng có thể truy cập dữ liệu hoặc chức năng không thuộc quyền.</td>
+          <td>Lộ dữ liệu cá nhân, truy cập trái phép chức năng quản trị.</td>
+        </tr>
+        <tr>
+          <td>A05: Security Misconfiguration</td>
+          <td>Thiếu security headers, cấu hình server chưa an toàn.</td>
+          <td>Tăng nguy cơ XSS, clickjacking hoặc rò rỉ thông tin hệ thống.</td>
+        </tr>
+      </table>
+    </section>
+
+    <!-- SECTION 4 -->
+    <section id="docker" class="section-card">
+      <h2>4. Triển khai OWASP Juice Shop local bằng Docker</h2>
+      <p>
+        Ngoài việc sử dụng phiên bản online, sinh viên cần triển khai OWASP Juice Shop
+        trên máy local bằng Docker để kiểm tra và rà soát lỗi trong môi trường cục bộ.
+      </p>
+
+      <h3>4.1. Pull image Juice Shop</h3>
+      <div class="code-box">
+        docker pull bkimminich/juice-shop
+      </div>
+
+      <h3>4.2. Chạy container</h3>
+      <div class="code-box">
+        docker run --rm -p 3000:3000 bkimminich/juice-shop
+      </div>
+
+      <h3>4.3. Truy cập ứng dụng</h3>
+      <p>
+        Sau khi container chạy thành công, mở trình duyệt và truy cập:
+      </p>
+
+      <div class="code-box">
+        http://localhost:3000
+      </div>
+
+      <h3>4.4. Ý nghĩa câu lệnh Docker</h3>
+      <table>
+        <tr>
+          <th>Thành phần</th>
+          <th>Ý nghĩa</th>
+        </tr>
+        <tr>
+          <td>docker run</td>
+          <td>Chạy một container từ image đã tải.</td>
+        </tr>
+        <tr>
+          <td>--rm</td>
+          <td>Tự động xóa container sau khi dừng.</td>
+        </tr>
+        <tr>
+          <td>-p 3000:3000</td>
+          <td>Ánh xạ port 3000 trên máy thật với port 3000 trong container.</td>
+        </tr>
+        <tr>
+          <td>bkimminich/juice-shop</td>
+          <td>Tên image OWASP Juice Shop trên Docker Hub.</td>
+        </tr>
+      </table>
+    </section>
+
+    <!-- SECTION 5 -->
+    <section id="khac-phuc" class="section-card">
+      <h2>5. Giải pháp khắc phục</h2>
+      <p>
+        Các lỗi phát hiện được cần được khắc phục bằng cách kết hợp giữa lập trình
+        an toàn, cấu hình server đúng cách và giám sát hệ thống trong quá trình vận hành.
+      </p>
+
+      <ul class="solution-list">
+        <li>Sử dụng HTTPS/TLS để mã hóa dữ liệu truyền tải.</li>
+        <li>Thêm các HTTP Security Headers quan trọng.</li>
+        <li>Kiểm tra và lọc dữ liệu đầu vào từ người dùng.</li>
+        <li>Dùng prepared statement để giảm nguy cơ Injection.</li>
+        <li>Kiểm tra phân quyền ở backend, không chỉ kiểm tra ở giao diện.</li>
+        <li>Không để lộ thông báo lỗi chi tiết ra phía người dùng.</li>
+        <li>Không bật debug mode khi triển khai thật.</li>
+        <li>Ghi log và giám sát các request bất thường.</li>
+      </ul>
+
+      <h3>Ví dụ cấu hình Security Headers cơ bản</h3>
+      <div class="code-box">
+        Content-Security-Policy: default-src 'self'<br>
+        X-Frame-Options: DENY<br>
+        X-Content-Type-Options: nosniff<br>
+        Referrer-Policy: no-referrer<br>
+        Permissions-Policy: camera=(), microphone=(), geolocation=()
+      </div>
+    </section>
+
+    <!-- SECTION 6 -->
+    <section id="cloud" class="section-card">
+      <h2>6. Phân tích triển khai ứng dụng trên cloud</h2>
+
+      <h3>6.1. Lỗ hổng được chọn</h3>
+      <p>
+        Khi triển khai ứng dụng web trên nền tảng cloud công cộng, nhóm chọn
+        <strong>A01: Broken Access Control</strong> là lỗ hổng nguy hiểm nhất.
+        Đây là lỗi xảy ra khi hệ thống không kiểm tra đúng quyền truy cập của người dùng.
+      </p>
+
+      <div class="highlight-box">
+        Ví dụ: Người dùng A chỉ được xem đơn hàng của mình, nhưng do backend không
+        kiểm tra quyền, người dùng A có thể thay đổi mã đơn hàng trong request để xem
+        đơn hàng của người dùng B.
+      </div>
+
+      <h3>6.2. Vì sao nguy hiểm hơn trên cloud?</h3>
+      <p>
+        Trong môi trường nội bộ, ứng dụng thường chỉ được truy cập bởi một số người
+        trong phạm vi giới hạn. Tuy nhiên, khi triển khai trên cloud công cộng,
+        website thường được public ra internet. Điều này khiến bất kỳ ai cũng có thể
+        gửi request đến hệ thống. Nếu backend không kiểm tra quyền chặt chẽ, lỗi phân quyền
+        có thể bị khai thác trên phạm vi rộng hơn.
+      </p>
+
+      <table>
+        <tr>
+          <th>Tiêu chí</th>
+          <th>Môi trường nội bộ</th>
+          <th>Môi trường cloud công cộng</th>
+        </tr>
+        <tr>
+          <td>Phạm vi truy cập</td>
+          <td>Thường giới hạn trong mạng nội bộ hoặc máy local.</td>
+          <td>Có thể truy cập từ internet.</td>
+        </tr>
+        <tr>
+          <td>Số lượng người truy cập</td>
+          <td>Ít, chủ yếu là người trong nhóm hoặc tổ chức.</td>
+          <td>Lớn hơn, bao gồm cả người dùng bên ngoài.</td>
+        </tr>
+        <tr>
+          <td>Khả năng bị dò quét</td>
+          <td>Thấp hơn.</td>
+          <td>Cao hơn do endpoint public.</td>
+        </tr>
+        <tr>
+          <td>Phạm vi ảnh hưởng</td>
+          <td>Thường nhỏ hơn.</td>
+          <td>Có thể ảnh hưởng đến toàn bộ dữ liệu và dịch vụ.</td>
+        </tr>
+      </table>
+
+      <h3>6.3. Hậu quả tiềm ẩn</h3>
+      <table>
+        <tr>
+          <th>Đối tượng ảnh hưởng</th>
+          <th>Hậu quả</th>
+        </tr>
+        <tr>
+          <td>Dữ liệu</td>
+          <td>
+            Lộ thông tin tài khoản, email, số điện thoại, địa chỉ, đơn hàng,
+            dữ liệu quản trị hoặc dữ liệu trong database.
+          </td>
+        </tr>
+        <tr>
+          <td>Người dùng</td>
+          <td>
+            Mất quyền riêng tư, bị truy cập tài khoản trái phép, bị thay đổi thông tin
+            hoặc bị lợi dụng dữ liệu cá nhân.
+          </td>
+        </tr>
+        <tr>
+          <td>Hệ thống</td>
+          <td>
+            Mất toàn vẹn dữ liệu, bị sửa đổi trái phép, gián đoạn dịch vụ,
+            mất uy tín và có thể ảnh hưởng đến các dịch vụ cloud liên quan.
+          </td>
+        </tr>
+      </table>
+
+      <h3>6.4. Các lớp bảo vệ cloud giúp giảm rủi ro</h3>
+
+      <div class="cloud-box">
+        <p>
+          Cloud có thể hỗ trợ giảm thiểu rủi ro bằng nhiều lớp bảo vệ như IAM,
+          firewall, WAF, API Gateway, logging, monitoring và backup. Tuy nhiên,
+          cloud không thể tự sửa lỗi logic phân quyền trong mã nguồn ứng dụng.
+        </p>
+
+        <div class="cloud-layers">
+          <div class="layer-item">IAM</div>
+          <div class="layer-item">WAF</div>
+          <div class="layer-item">Firewall</div>
+          <div class="layer-item">API Gateway</div>
+          <div class="layer-item">HTTPS/TLS</div>
+          <div class="layer-item">Logging</div>
+          <div class="layer-item">Monitoring</div>
+          <div class="layer-item">Backup</div>
+        </div>
+      </div>
+
+      <table>
+        <tr>
+          <th>Lớp bảo vệ</th>
+          <th>Vai trò</th>
+        </tr>
+        <tr>
+          <td>IAM</td>
+          <td>Quản lý danh tính và phân quyền truy cập tài nguyên cloud.</td>
+        </tr>
+        <tr>
+          <td>Firewall / Security Group</td>
+          <td>Giới hạn port, IP và luồng truy cập vào hệ thống.</td>
+        </tr>
+        <tr>
+          <td>WAF</td>
+          <td>Chặn một số request độc hại hoặc hành vi tấn công phổ biến.</td>
+        </tr>
+        <tr>
+          <td>API Gateway</td>
+          <td>Kiểm soát, xác thực, giới hạn tốc độ và ghi log request API.</td>
+        </tr>
+        <tr>
+          <td>Logging & Monitoring</td>
+          <td>Ghi nhận và cảnh báo các hành vi truy cập bất thường.</td>
+        </tr>
+        <tr>
+          <td>Backup</td>
+          <td>Hỗ trợ khôi phục dữ liệu khi có sự cố.</td>
+        </tr>
+      </table>
+
+      <h3>6.5. Đánh giá vai trò thực tế của cloud</h3>
+      <p>
+        Cloud đóng vai trò quan trọng trong việc giảm rủi ro bảo mật nhờ cung cấp
+        nhiều công cụ bảo vệ sẵn có. Tuy nhiên, cloud không thể thay thế việc lập trình
+        an toàn. Đối với lỗi Broken Access Control, nguyên nhân chính nằm ở logic xử lý
+        quyền truy cập trong backend. Vì vậy, hệ thống cần kết hợp cả bảo mật ở tầng
+        ứng dụng và bảo mật ở tầng cloud.
+      </p>
+
+      <div class="highlight-box">
+        Kết luận: Cloud giúp tăng cường phòng thủ bằng nhiều lớp bảo vệ, nhưng
+        backend vẫn phải kiểm tra quyền truy cập chặt chẽ, xác minh vai trò người dùng
+        và kiểm tra quyền sở hữu dữ liệu trước khi trả kết quả.
+      </div>
+    </section>
+
+    <!-- SECTION 7 -->
+    <section id="hinh-anh" class="section-card">
+      <h2>7. Hình ảnh minh chứng</h2>
+      <p>
+        Phần này dùng để chèn các ảnh chụp màn hình trong quá trình thực hành.
+        Có thể chụp từ OWASP Juice Shop, Developer Tools, Docker terminal và kết quả
+        kiểm tra security headers.
+      </p>
+
+      <div class="image-grid">
+        <div class="image-box">
+          <strong>Hình 1: Trang OWASP Juice Shop</strong>
+          <p>Chèn ảnh trang chủ Juice Shop online hoặc localhost.</p>
+          <!-- <img src="images/juice-shop-home.png" alt="Trang chủ OWASP Juice Shop"> -->
+        </div>
+
+        <div class="image-box">
+          <strong>Hình 2: Form đăng nhập</strong>
+          <p>Chèn ảnh giao diện Login của Juice Shop.</p>
+          <!-- <img src="images/login-form.png" alt="Form đăng nhập Juice Shop"> -->
+        </div>
+
+        <div class="image-box">
+          <strong>Hình 3: Developer Tools - Network</strong>
+          <p>Chèn ảnh request/response khi kiểm tra lỗi.</p>
+          <!-- <img src="images/devtools-network.png" alt="Developer Tools Network"> -->
+        </div>
+
+        <div class="image-box">
+          <strong>Hình 4: Docker chạy Juice Shop local</strong>
+          <p>Chèn ảnh terminal sau khi chạy docker run thành công.</p>
+          <!-- <img src="images/docker-run.png" alt="Docker run Juice Shop"> -->
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 8 -->
+    <section id="ket-luan" class="section-card">
+      <h2>8. Kết luận</h2>
+      <p>
+        Qua Lab Tuần 3, nhóm đã tìm hiểu các khái niệm cơ bản về HTTP, HTTPS,
+        TLS, HTTP Security Headers và OWASP Top 10. Nhóm cũng thực hành kiểm tra
+        một số lỗ hổng bảo mật trên OWASP Juice Shop như Injection, Broken Access Control
+        và Security Misconfiguration.
+      </p>
+
+      <p>
+        Khi triển khai ứng dụng web trên cloud công cộng, các lỗ hổng bảo mật có thể
+        trở nên nguy hiểm hơn do hệ thống được public ra internet và có phạm vi ảnh hưởng
+        lớn hơn. Vì vậy, cần áp dụng nhiều lớp bảo vệ như kiểm tra quyền ở backend,
+        sử dụng HTTPS, IAM, firewall, WAF, logging, monitoring và backup.
+      </p>
+
+      <div class="highlight-box">
+        Bảo mật ứng dụng web cần được thực hiện theo hướng phòng thủ nhiều lớp:
+        an toàn trong mã nguồn, cấu hình hệ thống đúng cách và sử dụng hiệu quả
+        các dịch vụ bảo mật của cloud.
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <p><strong>LAB TUẦN 3 – OWASP Security Lab</strong></p>
+    <p>Thực hiện: Nhóm sinh viên</p>
+    <p>Nội dung: Cấu hình, phát hiện và khắc phục lỗi OWASP</p>
+  </footer>
+
+</body>
+</html>
+```
