@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lab Tuần 4 - Giám sát, nhật ký và phát hiện bất thường</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f3f6fb;
+      color: #1f2937;
+      line-height: 1.7;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1e3a8a, #2563eb);
+      color: white;
+      padding: 45px 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 34px;
+      text-transform: uppercase;
+    }
+
+    header h2 {
+      margin: 10px 0;
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    header p {
+      max-width: 900px;
+      margin: 10px auto 0;
+      font-size: 16px;
+    }
+
+    nav {
+      background: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    }
+
+    nav .nav-container {
+      max-width: 1150px;
+      margin: auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      padding: 12px 20px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #1e40af;
+      font-weight: bold;
+      font-size: 14px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      background: #eff6ff;
+    }
+
+    nav a:hover {
+      background: #2563eb;
+      color: white;
+    }
+
+    main {
+      max-width: 1150px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    section {
+      background: white;
+      margin-bottom: 26px;
+      padding: 26px;
+      border-radius: 16px;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+    }
+
+    h2 {
+      color: #1e40af;
+      border-left: 5px solid #2563eb;
+      padding-left: 12px;
+      margin-top: 0;
+      font-size: 24px;
+    }
+
+    h3 {
+      color: #1e3a8a;
+      margin-top: 22px;
+      font-size: 20px;
+    }
+
+    h4 {
+      color: #111827;
+      margin-bottom: 8px;
+      font-size: 17px;
+    }
+
+    p {
+      margin-bottom: 12px;
+    }
+
+    ul {
+      padding-left: 24px;
+    }
+
+    li {
+      margin-bottom: 6px;
+    }
+
+    .note {
+      background: #eff6ff;
+      border-left: 5px solid #2563eb;
+      padding: 14px 16px;
+      border-radius: 10px;
+      color: #1e3a8a;
+      margin: 14px 0;
+    }
+
+    .warning {
+      background: #fff7ed;
+      border-left: 5px solid #f97316;
+      border: 1px solid #fed7aa;
+      padding: 14px 16px;
+      border-radius: 10px;
+      color: #7c2d12;
+      margin: 14px 0;
+    }
+
+    .success {
+      background: #ecfdf5;
+      border-left: 5px solid #10b981;
+      border: 1px solid #a7f3d0;
+      padding: 14px 16px;
+      border-radius: 10px;
+      color: #065f46;
+      margin: 14px 0;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .card {
+      background: #f8fafc;
+      border: 1px solid #dbeafe;
+      border-radius: 14px;
+      padding: 18px;
+    }
+
+    .card h4 {
+      margin-top: 0;
+      color: #1e40af;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 16px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 15px;
+    }
+
+    th,
+    td {
+      border: 1px solid #d1d5db;
+      padding: 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #2563eb;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background: #f9fafb;
+    }
+
+    pre {
+      background: #111827;
+      color: #e5e7eb;
+      padding: 14px;
+      border-radius: 10px;
+      overflow-x: auto;
+      font-size: 14px;
+    }
+
+    footer {
+      text-align: center;
+      background: #111827;
+      color: white;
+      padding: 22px;
+      margin-top: 40px;
+    }
+
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 28px;
+      }
+
+      header h2 {
+        font-size: 20px;
+      }
+
+      section {
+        padding: 20px;
+      }
+
+      h2 {
+        font-size: 21px;
+      }
+
+      nav .nav-container {
+        justify-content: flex-start;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+      }
+
+      nav a {
+        white-space: nowrap;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>Lab Tuần 4</h1>
+    <h2>Giám sát, nhật ký và phát hiện bất thường</h2>
+    <p>
+      Bài lab trình bày kiến thức về Monitoring, Logging, Security Visibility,
+      phân tích hành vi bất thường và vai trò của log trong điều tra sự cố
+      trên môi trường điện toán đám mây.
+    </p>
+  </header>
+
+  <nav>
+    <div class="nav-container">
+      <a href="#muctieu">Mục tiêu</a>
+      <a href="#yeucau1">Yêu cầu 1</a>
+      <a href="#yeucau2">Yêu cầu 2</a>
+      <a href="#yeucau3">Yêu cầu 3</a>
+      <a href="#yeucau4">Yêu cầu 4</a>
+      <a href="#yeucau5">Yêu cầu 5</a>
+      <a href="#ketluan">Kết luận</a>
+    </div>
+  </nav>
+
+  <main>
+
+    <!-- MỤC TIÊU -->
+    <section id="muctieu">
+      <h2>I. Mục tiêu</h2>
+
+      <p>
+        Mục tiêu của bài lab là giúp sinh viên hiểu rõ sự khác nhau giữa
+        Monitoring và Logging trong an toàn cloud. Đồng thời, bài lab giúp
+        sinh viên nhận biết các dấu hiệu của hành vi bất thường, phân tích log
+        và dữ liệu giám sát ở mức khái niệm – vận hành.
+      </p>
+
+      <ul>
+        <li>Hiểu rõ Monitoring và Logging khác nhau ở đâu trong an toàn cloud.</li>
+        <li>Xác định các indicator - chỉ dấu của hành vi bất thường.</li>
+        <li>Phân tích log và dữ liệu giám sát ở mức khái niệm, vận hành.</li>
+        <li>Liên hệ Monitoring với phát hiện sớm sự cố và Incident Response - ứng phó sự cố.</li>
+        <li>Nhận thức rõ giới hạn của giám sát trong bảo mật ứng dụng.</li>
+      </ul>
+    </section>
+
+    <!-- YÊU CẦU 1 -->
+    <section id="yeucau1">
+      <h2>II. Nội dung thực hành</h2>
+      <h2>1. Yêu cầu 1: Kiến thức cơ bản về Monitoring và Logging</h2>
+
+      <h3>1.1. Monitoring là gì?</h3>
+      <p>
+        Monitoring - giám sát là quá trình theo dõi liên tục trạng thái,
+        hiệu năng và hoạt động của hệ thống. Trong môi trường cloud, monitoring
+        giúp quản trị viên phát hiện nhanh các dấu hiệu bất thường như CPU tăng cao,
+        RAM gần đầy, số lượng request tăng đột biến, lỗi hệ thống tăng hoặc nhiều
+        lần đăng nhập thất bại.
+      </p>
+
+      <div class="note">
+        Ví dụ: Nếu website bình thường có 100 request/phút nhưng đột nhiên tăng
+        lên 5.000 request/phút, hệ thống monitoring có thể phát hiện và gửi cảnh báo.
+      </div>
+
+      <h3>1.2. Logging là gì?</h3>
+      <p>
+        Logging - ghi nhật ký là quá trình ghi lại các sự kiện xảy ra trong hệ thống.
+        Log thường lưu các thông tin như người dùng nào đã truy cập, truy cập lúc nào,
+        từ địa chỉ IP nào, thực hiện hành động gì và hành động đó thành công hay thất bại.
+      </p>
+
+      <pre>2026-06-21 10:15:30 | user=admin | action=login_failed | ip=45.10.22.8</pre>
+
+      <h3>1.3. Security Visibility trong cloud</h3>
+      <p>
+        Security Visibility - khả năng quan sát bảo mật là khả năng nhìn thấy,
+        theo dõi và phân tích các hoạt động đang diễn ra trong hệ thống cloud.
+        Nếu không có security visibility, quản trị viên khó phát hiện hệ thống
+        đang bị tấn công, bị truy cập trái phép hoặc bị khai thác lỗ hổng.
+      </p>
+
+      <h3>1.4. Vai trò của Monitoring và Logging trong môi trường cloud</h3>
+      <p>
+        Trong môi trường điện toán đám mây, Monitoring và Logging giữ vai trò rất
+        quan trọng trong việc vận hành và bảo vệ hệ thống. Monitoring giúp phát hiện
+        sớm các dấu hiệu bất thường, còn Logging giúp điều tra chi tiết nguyên nhân
+        khi sự cố đã xảy ra.
+      </p>
+
+      <div class="success">
+        Có thể hiểu ngắn gọn: Monitoring giúp biết hệ thống đang có vấn đề,
+        còn Logging giúp biết vấn đề đó xảy ra như thế nào, do ai, vào thời điểm nào.
+      </div>
+
+      <h3>1.5. So sánh Monitoring và Logging</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Tiêu chí</th>
+              <th>Monitoring - Giám sát</th>
+              <th>Logging - Ghi nhật ký</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Bản chất</td>
+              <td>Theo dõi chỉ số và trạng thái hệ thống.</td>
+              <td>Ghi lại chi tiết các sự kiện xảy ra.</td>
+            </tr>
+            <tr>
+              <td>Dữ liệu chính</td>
+              <td>Metrics - chỉ số như CPU, RAM, request, error rate.</td>
+              <td>Logs - nhật ký sự kiện như đăng nhập, IP, hành động.</td>
+            </tr>
+            <tr>
+              <td>Mục đích</td>
+              <td>Phát hiện nhanh bất thường và cảnh báo sớm.</td>
+              <td>Điều tra chi tiết nguyên nhân sự cố.</td>
+            </tr>
+            <tr>
+              <td>Thời điểm sử dụng</td>
+              <td>Trước và trong khi sự cố xảy ra.</td>
+              <td>Trong và sau khi sự cố xảy ra.</td>
+            </tr>
+            <tr>
+              <td>Ví dụ</td>
+              <td>CPU tăng 95%, request tăng đột biến.</td>
+              <td>User admin đăng nhập thất bại từ IP lạ.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- YÊU CẦU 2 -->
+    <section id="yeucau2">
+      <h2>2. Yêu cầu 2: Xác định đối tượng cần giám sát</h2>
+
+      <p>
+        Giả sử nhóm đang vận hành một website hoặc ứng dụng web triển khai trên cloud,
+        cần xác định các đối tượng quan trọng cần giám sát để đảm bảo hệ thống hoạt động
+        ổn định và an toàn.
+      </p>
+
+      <div class="grid">
+        <div class="card">
+          <h4>Người dùng truy cập hệ thống</h4>
+          <p>
+            Cần giám sát số lượng người dùng, địa chỉ IP, vị trí truy cập và hành vi truy cập.
+            Nếu không giám sát, hệ thống có thể bị tấn công DDoS hoặc truy cập trái phép
+            mà quản trị viên không phát hiện kịp thời.
+          </p>
+        </div>
+
+        <div class="card">
+          <h4>Phiên đăng nhập</h4>
+          <p>
+            Session - phiên đăng nhập cần được giám sát để phát hiện session kéo dài bất thường,
+            đăng nhập từ nhiều vị trí lạ hoặc dấu hiệu session bị chiếm quyền.
+          </p>
+        </div>
+
+        <div class="card">
+          <h4>Hoạt động đăng nhập / đăng xuất</h4>
+          <p>
+            Cần theo dõi số lần đăng nhập thành công, đăng nhập thất bại, đăng nhập từ IP lạ
+            hoặc đăng nhập ngoài giờ làm việc. Nếu không giám sát, có thể bỏ sót brute force attack.
+          </p>
+        </div>
+
+        <div class="card">
+          <h4>Các yêu cầu truy cập bất thường</h4>
+          <p>
+            Cần giám sát các request tăng cao đột biến, truy cập vào endpoint nhạy cảm,
+            request chứa dấu hiệu SQL injection hoặc XSS.
+          </p>
+        </div>
+
+        <div class="card">
+          <h4>Các lỗi phát sinh trong hệ thống</h4>
+          <p>
+            Cần giám sát lỗi 500, lỗi database, lỗi timeout, lỗi xác thực hoặc lỗi phân quyền.
+            Nếu không giám sát, lỗi có thể kéo dài và ảnh hưởng đến người dùng.
+          </p>
+        </div>
+      </div>
+
+      <h3>Phân biệt Monitoring và Logging trong các tình huống</h3>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Tình huống</th>
+              <th>Phù hợp hơn</th>
+              <th>Giải thích</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Phát hiện số lần đăng nhập thất bại tăng đột biến.</td>
+              <td>Monitoring</td>
+              <td>
+                Vì cần phát hiện nhanh sự tăng bất thường của một chỉ số theo thời gian thực.
+              </td>
+            </tr>
+            <tr>
+              <td>Điều tra ai đã truy cập hệ thống vào thời điểm xảy ra sự cố.</td>
+              <td>Logging</td>
+              <td>
+                Vì cần thông tin chi tiết như tài khoản, IP, thời gian và hành động cụ thể.
+              </td>
+            </tr>
+            <tr>
+              <td>Xác định nguyên nhân gây lỗi hệ thống.</td>
+              <td>Logging</td>
+              <td>
+                Vì log giúp xem chi tiết lỗi, request gây lỗi, endpoint bị lỗi và thời điểm lỗi xảy ra.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- YÊU CẦU 3 -->
+    <section id="yeucau3">
+      <h2>3. Yêu cầu 3: Phân tích hành vi bất thường</h2>
+
+      <h3>3.1. Tình huống giả định</h3>
+      <p>
+        Hệ thống ghi nhận trong vòng 10 phút có số lượng request tăng cao bất thường,
+        nhiều lần đăng nhập thất bại liên tiếp và truy cập từ địa chỉ IP hoặc vị trí
+        không quen thuộc.
+      </p>
+
+      <h3>3.2. Các dấu hiệu thể hiện hành vi bất thường</h3>
+      <ul>
+        <li>
+          Số lượng request tăng cao bất thường: có thể là dấu hiệu của DDoS attack,
+          bot quét hệ thống hoặc truy cập tự động.
+        </li>
+        <li>
+          Nhiều lần đăng nhập thất bại liên tiếp: có thể là dấu hiệu của brute force attack
+          hoặc credential stuffing.
+        </li>
+        <li>
+          Truy cập từ IP hoặc vị trí không quen thuộc: có thể cho thấy tài khoản bị lộ
+          hoặc có người cố gắng truy cập trái phép.
+        </li>
+      </ul>
+
+      <h3>3.3. Dấu hiệu phát hiện nhờ Monitoring</h3>
+      <p>
+        Monitoring giúp phát hiện các dấu hiệu liên quan đến sự thay đổi của chỉ số hệ thống.
+        Ví dụ: request tăng cao, số lần đăng nhập thất bại tăng nhanh, CPU/RAM tăng bất thường,
+        network traffic tăng hoặc response time chậm.
+      </p>
+
+      <div class="note">
+        Ví dụ: Nếu số lượng request tăng từ 100 request/phút lên 5.000 request/phút,
+        monitoring có thể phát hiện đây là hành vi bất thường và gửi cảnh báo.
+      </div>
+
+      <h3>3.4. Dấu hiệu phát hiện nhờ Log</h3>
+      <p>
+        Log giúp phát hiện và phân tích các thông tin chi tiết như IP nào truy cập,
+        tài khoản nào đăng nhập thất bại, truy cập vào endpoint nào, thời điểm xảy ra
+        sự kiện và user-agent của người truy cập.
+      </p>
+
+      <pre>2026-06-21 10:05:12 | user=admin | action=login_failed | ip=45.12.33.8 | location=Unknown</pre>
+
+      <h3>3.5. Nhận xét nếu chỉ có Monitoring mà không có Log</h3>
+      <p>
+        Nếu hệ thống chỉ có monitoring mà không có log, quản trị viên chỉ biết có bất thường
+        đang xảy ra nhưng không biết chi tiết nguyên nhân. Hệ thống sẽ thiếu thông tin về
+        tài khoản bị tấn công, IP thực hiện truy cập, thời điểm cụ thể, endpoint bị truy cập
+        và hành động của người dùng.
+      </p>
+
+      <div class="warning">
+        Vì vậy, Monitoring chỉ giúp phát hiện “có vấn đề”, còn Logging giúp điều tra
+        “vấn đề xảy ra như thế nào, do ai và ảnh hưởng đến đâu”.
+      </div>
+    </section>
+
+    <!-- YÊU CẦU 4 -->
+    <section id="yeucau4">
+      <h2>4. Yêu cầu 4: Vai trò của log trong điều tra sự cố</h2>
+
+      <h3>4.1. Log giúp trả lời những câu hỏi nào khi xảy ra sự cố an toàn?</h3>
+      <p>
+        Khi xảy ra sự cố an toàn, log giúp trả lời các câu hỏi như:
+      </p>
+      <ul>
+        <li>Ai đã truy cập hệ thống?</li>
+        <li>Truy cập vào thời điểm nào?</li>
+        <li>Truy cập từ địa chỉ IP nào?</li>
+        <li>Người dùng đã thực hiện hành động gì?</li>
+        <li>Hành động đó thành công hay thất bại?</li>
+        <li>Tài khoản hoặc dữ liệu nào bị ảnh hưởng?</li>
+        <li>Sự cố bắt đầu từ thời điểm nào?</li>
+        <li>Request nào gây lỗi hoặc gây bất thường?</li>
+      </ul>
+
+      <h3>4.2. Nếu không có log thì gặp khó khăn gì?</h3>
+      <p>
+        Nếu không có log, việc xác định nguyên nhân sự cố sẽ rất khó khăn vì không có dữ liệu
+        để truy vết. Quản trị viên không biết ai đã truy cập, truy cập khi nào, từ đâu,
+        đã thực hiện hành động gì và dữ liệu nào bị ảnh hưởng.
+      </p>
+
+      <p>
+        Trong trường hợp không có log, việc xác định trách nhiệm cũng rất khó vì thiếu bằng chứng
+        kỹ thuật. Khi đó, quá trình điều tra chỉ dựa trên suy đoán và không đủ độ tin cậy.
+      </p>
+
+      <h3>4.3. Rủi ro nếu log ghi quá chi tiết hoặc không được bảo vệ</h3>
+      <p>
+        Nếu log ghi quá chi tiết, hệ thống có thể vô tình lưu thông tin nhạy cảm như mật khẩu,
+        token đăng nhập, mã OTP, thông tin cá nhân hoặc thông tin thanh toán.
+      </p>
+
+      <pre>user=admin | password=123456 | token=abcxyz</pre>
+
+      <p>
+        Nếu log không được bảo vệ đúng cách, kẻ tấn công có thể đọc log để lấy thông tin hệ thống,
+        xóa log để che giấu dấu vết hoặc chỉnh sửa log để làm sai lệch quá trình điều tra.
+      </p>
+
+      <h3>4.4. Cloud hỗ trợ Monitoring và Logging ở những lớp nào?</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Lớp</th>
+              <th>Nội dung hỗ trợ Monitoring / Logging</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Hạ tầng</td>
+              <td>CPU, RAM, disk, máy ảo, container.</td>
+            </tr>
+            <tr>
+              <td>Mạng</td>
+              <td>IP truy cập, firewall, load balancer, network traffic.</td>
+            </tr>
+            <tr>
+              <td>Ứng dụng</td>
+              <td>API request, lỗi ứng dụng, response time, error rate.</td>
+            </tr>
+            <tr>
+              <td>Cơ sở dữ liệu</td>
+              <td>Truy vấn, lỗi kết nối, số lượng query, hiệu năng database.</td>
+            </tr>
+            <tr>
+              <td>Định danh và truy cập</td>
+              <td>Đăng nhập, đăng xuất, phân quyền, thay đổi tài khoản.</td>
+            </tr>
+            <tr>
+              <td>Lưu trữ</td>
+              <td>Upload, download, truy cập file.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>4.5. Cloud không thể giám sát những gì trong ứng dụng?</h3>
+      <p>
+        Cloud không thể tự hiểu toàn bộ logic nghiệp vụ bên trong ứng dụng nếu lập trình viên
+        không thiết kế logging phù hợp. Ví dụ, cloud có thể thấy request đặt hàng thành công,
+        nhưng không thể tự biết đơn hàng đó có gian lận hay không.
+      </p>
+
+      <ul>
+        <li>Không tự biết giao dịch có gian lận hay không.</li>
+        <li>Không tự biết người dùng có lợi dụng khuyến mãi hay không.</li>
+        <li>Không tự biết dữ liệu nhập vào có hợp lý về mặt nghiệp vụ hay không.</li>
+        <li>Không tự biết một hành động có đúng quy trình nội bộ hay không.</li>
+      </ul>
+
+      <h3>4.6. Monitoring giúp phát hiện sự cố ở giai đoạn nào?</h3>
+      <p>
+        Monitoring giúp phát hiện sự cố ở giai đoạn sớm, khi hệ thống bắt đầu có dấu hiệu bất thường
+        như request tăng đột biến, CPU tăng cao, lỗi 500 tăng, đăng nhập thất bại tăng hoặc response time chậm.
+      </p>
+
+      <h3>4.7. Logging hỗ trợ Incident Response ra sao?</h3>
+      <p>
+        Incident Response - ứng phó sự cố là quá trình phát hiện, phân tích, xử lý và khôi phục
+        sau sự cố an toàn thông tin. Logging hỗ trợ Incident Response bằng cách cung cấp bằng chứng,
+        xác định nguyên nhân gốc, truy vết hành động của attacker, xác định tài khoản bị ảnh hưởng
+        và hỗ trợ báo cáo sau sự cố.
+      </p>
+
+      <h3>4.8. Nếu phát hiện sự cố muộn thì hậu quả thế nào?</h3>
+      <p>
+        Nếu phát hiện sự cố muộn, kẻ tấn công có nhiều thời gian khai thác hệ thống, dữ liệu có thể
+        bị đánh cắp hoặc thay đổi, log có thể bị xóa, hệ thống bị gián đoạn lâu hơn và việc xác định
+        nguyên nhân trở nên khó khăn hơn.
+      </p>
+
+      <div class="warning">
+        Phát hiện sớm giúp giảm thiệt hại, còn phát hiện muộn làm tăng nguy cơ mất dữ liệu,
+        mất uy tín và khó khôi phục hệ thống.
+      </div>
+    </section>
+
+    <!-- YÊU CẦU 5 -->
+    <section id="yeucau5">
+      <h2>5. Yêu cầu 5: Triển khai các nội dung lên web Lab 1</h2>
+
+      <p>
+        Nhóm đã triển khai các nội dung của Lab tuần 4 lên website Lab 1 nhằm trình bày kiến thức
+        về giám sát, ghi nhật ký và phát hiện hành vi bất thường dưới dạng giao diện web.
+        Việc triển khai giúp người xem dễ theo dõi nội dung, nắm được vai trò của Monitoring
+        và Logging trong môi trường điện toán đám mây.
+      </p>
+
+      <h3>5.1. Cấu trúc website đã triển khai</h3>
+      <ul>
+        <li>Phần mục tiêu bài lab.</li>
+        <li>Phần kiến thức cơ bản về Monitoring, Logging và Security Visibility.</li>
+        <li>Phần so sánh giữa Monitoring và Logging.</li>
+        <li>Phần xác định các đối tượng cần giám sát.</li>
+        <li>Phần phân tích hành vi bất thường.</li>
+        <li>Phần vai trò của log trong điều tra sự cố.</li>
+        <li>Phần liên hệ triển khai trên môi trường cloud.</li>
+        <li>Phần kết luận.</li>
+      </ul>
+
+      <h3>5.2. Nội dung triển khai</h3>
+      <p>
+        Website trình bày đầy đủ các nội dung chính của bài lab. Ở phần đầu, website giới thiệu
+        khái niệm Monitoring và Logging. Tiếp theo, website trình bày bảng so sánh để làm rõ sự
+        khác nhau giữa hai thành phần này. Sau đó, website phân tích các đối tượng cần giám sát
+        trong một hệ thống web triển khai trên cloud như người dùng, phiên đăng nhập, hoạt động
+        đăng nhập, request bất thường và lỗi hệ thống.
+      </p>
+
+      <p>
+        Bên cạnh đó, website cũng trình bày tình huống phân tích hành vi bất thường, trong đó
+        hệ thống ghi nhận request tăng cao, đăng nhập thất bại liên tiếp và truy cập từ IP lạ.
+        Nội dung này giúp làm rõ dấu hiệu nào phát hiện nhờ Monitoring và dấu hiệu nào cần
+        phân tích bằng Logging.
+      </p>
+
+      <h3>5.3. Kết quả đạt được</h3>
+      <p>
+        Sau khi triển khai, website Lab 1 đã bổ sung đầy đủ nội dung của Lab tuần 4.
+        Giao diện được chia thành nhiều phần rõ ràng, có bảng so sánh, ví dụ log, danh sách
+        đối tượng cần giám sát và phần kết luận. Website giúp trình bày nội dung trực quan hơn
+        so với văn bản thuần túy.
+      </p>
+
+      <div class="success">
+        Kết quả: Website đã thể hiện đầy đủ nội dung về Monitoring, Logging, phát hiện hành vi
+        bất thường và vai trò của log trong điều tra sự cố trên môi trường cloud.
+      </div>
+    </section>
+
+    <!-- KẾT LUẬN -->
+    <section id="ketluan">
+      <h2>Kết luận</h2>
+
+      <p>
+        Monitoring và Logging là hai thành phần quan trọng trong bảo mật và vận hành hệ thống cloud.
+        Monitoring giúp phát hiện nhanh các dấu hiệu bất thường thông qua các chỉ số như request,
+        CPU, RAM, lỗi hệ thống hoặc số lần đăng nhập thất bại. Trong khi đó, Logging giúp ghi lại
+        chi tiết các sự kiện, hỗ trợ điều tra nguyên nhân, xác định trách nhiệm và phục vụ quá trình
+        Incident Response.
+      </p>
+
+      <p>
+        Nếu chỉ có Monitoring mà không có Logging, hệ thống có thể phát hiện có sự cố nhưng khó biết
+        sự cố do ai gây ra, xảy ra như thế nào và ảnh hưởng đến đâu. Vì vậy, trong môi trường cloud,
+        cần kết hợp cả Monitoring và Logging để nâng cao khả năng phát hiện, phân tích và xử lý sự cố
+        an toàn thông tin.
+      </p>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>Lab Tuần 4 - Giám sát, nhật ký và phát hiện bất thường</p>
+  </footer>
+
+</body>
+</html>
