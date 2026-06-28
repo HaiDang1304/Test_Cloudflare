@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Lab 5 - Incident Response & Tổng kết học phần</title>
+
+<style>
+
+/* ===== RESET ===== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    background:#f4f7fc;
+    color:#333;
+    line-height:1.8;
+}
+
+/* ===== HEADER ===== */
+
+header{
+    background:linear-gradient(135deg,#1e40af,#2563eb);
+    color:white;
+    text-align:center;
+    padding:70px 20px;
+}
+
+header h1{
+    font-size:42px;
+}
+
+header p{
+    margin-top:10px;
+    opacity:.9;
+}
+
+/* ===== CONTAINER ===== */
+
+.container{
+    width:90%;
+    max-width:1200px;
+    margin:auto;
+    padding:50px 0;
+}
+
+/* ===== TITLES ===== */
+
+h2{
+    color:#1e3a8a;
+    border-left:6px solid #2563eb;
+    padding-left:15px;
+    margin-bottom:30px;
+}
+
+h3{
+    color:#2563eb;
+    margin-bottom:15px;
+}
+
+h4{
+    color:#1d4ed8;
+    margin:15px 0;
+}
+
+/* ===== CARD ===== */
+
+.card{
+    background:white;
+    padding:30px;
+    border-radius:15px;
+    box-shadow:0 5px 20px rgba(0,0,0,.08);
+    margin-bottom:25px;
+    transition:.3s;
+}
+
+.card:hover{
+    transform:translateY(-4px);
+}
+
+.card ul{
+    margin-left:20px;
+}
+
+.card li{
+    margin-bottom:8px;
+}
+
+/* ===== STUDENT ===== */
+
+.student{
+    background:#dbeafe;
+    padding:20px;
+    border-left:6px solid #2563eb;
+    border-radius:12px;
+    margin-bottom:30px;
+}
+
+/* ===== GRID ===== */
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+    gap:25px;
+}
+
+/* ===== TIMELINE ===== */
+
+.timeline{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+}
+
+.step{
+    background:#2563eb;
+    color:white;
+    padding:15px 20px;
+    border-radius:30px;
+    font-weight:bold;
+}
+
+/* ===== TABLE ===== */
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+    box-shadow:0 5px 20px rgba(0,0,0,.08);
+}
+
+th{
+    background:#2563eb;
+    color:white;
+    padding:15px;
+}
+
+td{
+    border:1px solid #ddd;
+    padding:15px;
+    vertical-align:top;
+}
+
+tr:nth-child(even){
+    background:#f8fafc;
+}
+
+/* ===== FOOTER ===== */
+
+footer{
+    background:#0f172a;
+    color:white;
+    text-align:center;
+    padding:30px;
+    margin-top:60px;
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media(max-width:768px){
+
+    .grid{
+        grid-template-columns:1fr;
+    }
+
+    table{
+        display:block;
+        overflow-x:auto;
+    }
+
+    .timeline{
+        flex-direction:column;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+    <h1>Lab 5 - Incident Response</h1>
+
+    <p>An toàn Điện toán Đám mây</p>
+
+</header>
+
+
+<section class="container">
+
+    <div class="student">
+
+        <h3>Thông tin sinh viên</h3>
+
+        <p><b>MSSV:</b> 22004108</p>
+
+        <p><b>Họ và tên:</b> Lữ Hải Đăng</p>
+
+    </div>
+
+
+    <h2>1. Incident Response là gì?</h2>
+
+    <div class="card">
+
+        <p>
+            Incident Response (IR) là quy trình có tổ chức nhằm phát hiện,
+            phân tích, xử lý và khôi phục hệ thống sau khi xảy ra sự cố
+            an toàn thông tin. Mục tiêu là giảm thiểu thiệt hại, bảo vệ dữ liệu,
+            duy trì hoạt động và ngăn ngừa các sự cố tương tự trong tương lai.
+        </p>
+
+    </div>
+
+
+    <h2>2. Nội dung của Incident Response</h2>
+
+    <div class="card">
+
+        <ul>
+
+            <li><b>Preparation:</b> Chuẩn bị chính sách, đào tạo, IDS/IPS, sao lưu dữ liệu.</li>
+
+            <li><b>Detection:</b> Phát hiện dấu hiệu bất thường thông qua Monitoring và Logging.</li>
+
+            <li><b>Analysis:</b> Xác định nguyên nhân và phạm vi ảnh hưởng.</li>
+
+            <li><b>Containment:</b> Khóa tài khoản, cô lập máy chủ, chặn IP.</li>
+
+            <li><b>Eradication:</b> Loại bỏ mã độc, vá lỗ hổng.</li>
+
+            <li><b>Recovery:</b> Khôi phục dữ liệu và dịch vụ.</li>
+
+            <li><b>Lessons Learned:</b> Rút kinh nghiệm và cập nhật quy trình.</li>
+
+        </ul>
+
+    </div>
+
+
+    <h2>3. Vai trò trong môi trường Cloud</h2>
+
+    <div class="card">
+
+        <ul>
+
+            <li>Phát hiện sớm các cuộc tấn công.</li>
+
+            <li>Giảm thiểu thiệt hại và thời gian gián đoạn.</li>
+
+            <li>Đảm bảo tính sẵn sàng của dịch vụ.</li>
+
+            <li>Thu thập bằng chứng phục vụ điều tra.</li>
+
+            <li>Đáp ứng tiêu chuẩn ISO 27001 và NIST.</li>
+
+        </ul>
+
+    </div>
+
+
+    <h2>4. Các loại sự cố phổ biến</h2>
+
+    <div class="grid">
+
+        <div class="card">
+
+            <h3>Lộ tài khoản</h3>
+
+            <ul>
+
+                <li>Phishing</li>
+
+                <li>Mật khẩu yếu</li>
+
+                <li>Không dùng MFA</li>
+
+            </ul>
+
+            <h4>Biện pháp</h4>
+
+            <ul>
+
+                <li>Xác thực đa yếu tố</li>
+
+                <li>Thay đổi mật khẩu định kỳ</li>
+
+                <li>Giám sát đăng nhập bất thường</li>
+
+            </ul>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>Brute Force</h3>
+
+            <ul>
+
+                <li>Đăng nhập thất bại liên tục</li>
+
+                <li>Một IP gửi hàng nghìn request</li>
+
+                <li>Tài khoản thường xuyên bị khóa</li>
+
+            </ul>
+
+            <h4>Biện pháp</h4>
+
+            <ul>
+
+                <li>CAPTCHA</li>
+
+                <li>MFA</li>
+
+                <li>Giới hạn số lần đăng nhập</li>
+
+            </ul>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>Khai thác lỗ hổng</h3>
+
+            <ul>
+
+                <li>SQL Injection</li>
+
+                <li>XSS</li>
+
+                <li>Command Injection</li>
+
+                <li>Broken Access Control</li>
+
+            </ul>
+
+            <h4>Biện pháp</h4>
+
+            <ul>
+
+                <li>Secure Coding</li>
+
+                <li>WAF</li>
+
+                <li>Kiểm thử định kỳ</li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+
+    <h2>5. Monitoring và Logging</h2>
+
+    <div class="card">
+
+        <p>
+            Monitoring giúp phát hiện bất thường theo thời gian thực, trong khi
+            Logging lưu trữ toàn bộ sự kiện để điều tra và phân tích nguyên nhân.
+        </p>
+
+        <h4>Nếu không có Monitoring và Logging:</h4>
+
+        <ul>
+
+            <li>Không biết thời điểm xảy ra sự cố.</li>
+
+            <li>Không xác định được IP tấn công.</li>
+
+            <li>Không có bằng chứng phục vụ điều tra.</li>
+
+            <li>Không xác định được dữ liệu bị ảnh hưởng.</li>
+
+        </ul>
+
+    </div>
+
+
+    <h2>6. Chu trình Incident Response theo NIST</h2>
+
+    <div class="card">
+
+        <div class="timeline">
+
+            <div class="step">Preparation</div>
+
+            <div class="step">Detection</div>
+
+            <div class="step">Containment</div>
+
+            <div class="step">Eradication</div>
+
+            <div class="step">Recovery</div>
+
+            <div class="step">Lessons Learned</div>
+
+        </div>
+
+    </div>
+
+
+    <h2>7. Tổng hợp đánh giá 5 Lab</h2>
+
+    <table>
+
+        <tr>
+
+            <th>Lab</th>
+
+            <th>Nội dung</th>
+
+            <th>Kết quả</th>
+
+            <th>Đánh giá</th>
+
+        </tr>
+
+        <tr>
+
+            <td>Lab 1</td>
+
+            <td>Cloud Computing, Cloudflare Pages, HTTPS, CDN.</td>
+
+            <td>Triển khai website thành công.</td>
+
+            <td>Hoàn thành tốt.</td>
+
+        </tr>
+
+        <tr>
+
+            <td>Lab 2</td>
+
+            <td>IAM, Authentication, Authorization, Zero Trust.</td>
+
+            <td>Cloudflare Access hoạt động ổn định.</td>
+
+            <td>Hoàn thành tốt.</td>
+
+        </tr>
+
+        <tr>
+
+            <td>Lab 3</td>
+
+            <td>OWASP Top 10, Juice Shop, Docker.</td>
+
+            <td>Phân tích các lỗ hổng phổ biến.</td>
+
+            <td>Hoàn thành tốt.</td>
+
+        </tr>
+
+        <tr>
+
+            <td>Lab 4</td>
+
+            <td>Monitoring, Logging.</td>
+
+            <td>Phát hiện hành vi bất thường.</td>
+
+            <td>Hoàn thành tốt.</td>
+
+        </tr>
+
+        <tr>
+
+            <td>Lab 5</td>
+
+            <td>Incident Response theo NIST.</td>
+
+            <td>Phân tích và xử lý sự cố bảo mật.</td>
+
+            <td>Hoàn thành tốt.</td>
+
+        </tr>
+
+    </table>
+
+
+</section>
+
+
+<footer>
+
+    <p>© 2026 - Báo cáo học phần An toàn Điện toán Đám mây</p>
+
+</footer>
+
+</body>
+</html>
